@@ -34,7 +34,6 @@ mongoose.connect(process.env.MONGO_URI)
 // ───────────────────────────────
 app.use('/api/auth', require('./Routes/auth'));
 app.use('/api/gastos', require('./Routes/Gastos'));
-app.use('/api/metas', require('./Routes/metas'));
 
 // ───────────────────────────────
 // 🔥 RUTA DE PRUEBA
