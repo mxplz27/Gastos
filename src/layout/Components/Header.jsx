@@ -32,7 +32,7 @@ export default function Header() {
 
     const fetchResumen = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/gastos/resumen', { // ← URL completa
+        const res = await fetch('https://gastos-6upo.onrender.com', { // ← URL completa
           headers: { Authorization: `Bearer ${usuario.token}` },
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
