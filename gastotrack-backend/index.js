@@ -8,9 +8,9 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://gastos-1-qah3.onrender.com',
-    /\.vercel\.app$/,  // permite cualquier subdominio de vercel
+    'https://gastos-x2iw-em6rw67qz-mxplz27s-projects.vercel.app'
   ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
 
