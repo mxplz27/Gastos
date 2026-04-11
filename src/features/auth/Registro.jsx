@@ -56,7 +56,7 @@ export default function Registro() {
     // ── Llamada al backend ─────────────────────────────────────────────────
     setLoading(true);
     try {
-      const res = await fetch('https://gastos-6upo.onrender.com', {
+      const res = await fetch('https://gastos-1-qah3.onrender.com/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

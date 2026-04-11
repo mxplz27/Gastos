@@ -43,10 +43,10 @@ export default function Inicio() {
       setLoadingGastos(true);
       try {
         const [gastosRes, resumenRes] = await Promise.all([
-          fetch('https://gastos-6upo.onrender.com', {
+          fetch('https://gastos-1-qah3.onrender.com/', {
             headers: { Authorization: `Bearer ${usuario.token}` },
           }),
-          fetch('https://gastos-6upo.onrender.com', {
+          fetch('https://gastos-1-qah3.onrender.com/', {
             headers: { Authorization: `Bearer ${usuario.token}` },
           }),
         ]);

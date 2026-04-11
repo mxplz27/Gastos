@@ -14,7 +14,7 @@ ChartJS.register(ArcElement, Tooltip, CategoryScale, LinearScale, BarElement);
 
 // ── Constantes ────────────────────────────────────────────────────────────
 const VERDE      = '#22c55e';
-const API_GASTOS = 'https://gastos-6upo.onrender.com';
+const API_GASTOS = 'https://gastos-1-qah3.onrender.com/';
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 const coloresCat = {
