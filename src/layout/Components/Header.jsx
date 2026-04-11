@@ -6,8 +6,17 @@ import {
   Button,
   Box,
   Avatar,
-  Chip
+  Chip,
+  IconButton,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+  Divider
 } from '@mui/material';
+
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import { Link, useNavigate } from 'react-router-dom';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
@@ -37,8 +46,10 @@ export default function Header() {
   const usuario = JSON.parse(localStorage.getItem('usuarioActivo') || 'null');
 
   const [resumenMes, setResumenMes] = useState(null);
+  const [openMenu, setOpenMenu] = useState(false);
 
-  // ── OBTENER RESUMEN ─────────────────────────────────────────────────
+  const toggleMenu = () => setOpenMenu(!openMenu);
+
   useEffect(() => {
     if (!usuario) return;
 
@@ -50,14 +61,9 @@ export default function Header() {
           },
         });
 
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
         const data = await res.json();
-
         setResumenMes(data.totalMes ?? 0);
-      } catch (err) {
-        // silencioso
-      }
+      } catch (err) {}
     };
 
     fetchResumen();
@@ -68,118 +74,130 @@ export default function Header() {
     navigate('/');
   };
 
+  const menuItems = [
+    { text: 'Inicio', path: '/components' },
+    { text: 'API', path: '/api' },
+    { text: 'Mis gastos', path: '/MisGastos' },
+    { text: 'Seguimiento', path: '/Seguimiento' },
+  ];
+
   return (
     <AppBar
       position="static"
       elevation={0}
-      sx={{
-        bgcolor: BG_NAV,
-        borderBottom: '1px solid rgba(255,255,255,0.08)',
-      }}
+      sx={{ bgcolor: BG_NAV, borderBottom: '1px solid rgba(255,255,255,0.08)' }}
     >
-      <Toolbar sx={{ px: 10, py: 0.5 }}>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
 
-        {/* ── LOGO ── */}
-        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+        {/* LOGO */}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <AccountBalanceWalletIcon sx={{ color: VERDE, fontSize: 22 }} />
           <Typography sx={{ fontSize: 15, fontWeight: 500, color: TEXTO }}>
             Gestor<Box component="span" sx={{ color: VERDE }}>financiero</Box>
           </Typography>
         </Box>
 
-        {/* ── NAV ── */}
-        <Button component={Link} to="/components" sx={navBtn}>Inicio</Button>
-        <Button component={Link} to="/api" sx={navBtn}>API</Button>
-        <Button component={Link} to="/MisGastos" sx={navBtn}>Mis gastos</Button>
-        <Button component={Link} to="/Seguimiento" sx={navBtn}>Seguimiento</Button>
+        {/* NAV DESKTOP */}
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+          {menuItems.map((item) => (
+            <Button key={item.text} component={Link} to={item.path} sx={navBtn}>
+              {item.text}
+            </Button>
+          ))}
 
-        {/* ── RESUMEN MES ── */}
-        {usuario && (
-          <Chip
-            icon={<TrendingDownIcon sx={{ fontSize: 14, color: VERDE }} />}
-            label={`$${(resumenMes || 0).toLocaleString('es-CO')} este mes`}
-            size="small"
-            sx={{
-              mx: 2,
-              bgcolor: 'rgba(34,197,94,0.10)',
-              color: VERDE,
-              border: '0.5px solid rgba(34,197,94,0.35)',
-              fontSize: 12,
-            }}
-          />
-        )}
-
-        {/* ── USUARIO ── */}
-        {usuario ? (
-          <>
-            <Box
+          {usuario && (
+            <Chip
+              icon={<TrendingDownIcon sx={{ fontSize: 14, color: VERDE }} />}
+              label={`$${(resumenMes || 0).toLocaleString('es-CO')} este mes`}
+              size="small"
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-                mx: 1,
-                bgcolor: 'rgba(255,255,255,0.05)',
-                border: '0.5px solid rgba(255,255,255,0.08)',
-                px: 1.5,
-                py: 0.4,
-                borderRadius: 3,
+                mx: 2,
+                bgcolor: 'rgba(34,197,94,0.10)',
+                color: VERDE,
+                border: '0.5px solid rgba(34,197,94,0.35)',
               }}
-            >
-              <Avatar
+            />
+          )}
+
+          {usuario ? (
+            <>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Avatar sx={{ width: 26, height: 26, bgcolor: VERDE }}>
+                  {usuario?.nombre?.charAt(0)?.toUpperCase()}
+                </Avatar>
+              </Box>
+
+              <Button
+                onClick={handleCerrarSesion}
                 sx={{
-                  width: 26,
-                  height: 26,
-                  bgcolor: VERDE,
-                  color: '#0f172a',
-                  fontSize: 11,
-                  fontWeight: 500,
+                  ml: 1,
+                  border: '1px solid rgba(34,197,94,0.5)',
+                  color: VERDE,
+                  textTransform: 'none',
                 }}
               >
-                {usuario?.nombre?.charAt(0)?.toUpperCase()}
-              </Avatar>
+                Cerrar sesión
+              </Button>
+            </>
+          ) : (
+            <Button
+              component={Link}
+              to="/inicio"
+              sx={{ ml: 1, bgcolor: VERDE, color: '#0f172a' }}
+            >
+              Iniciar sesión
+            </Button>
+          )}
+        </Box>
 
-              <Typography sx={{ color: TEXTO, fontSize: 13 }}>
-                {usuario?.nombre}
-              </Typography>
+        {/* HAMBURGER MOBILE */}
+        <IconButton
+          onClick={toggleMenu}
+          sx={{ display: { xs: 'flex', md: 'none' }, color: TEXTO }}
+        >
+          <MenuIcon />
+        </IconButton>
+
+        {/* DRAWER MOBILE */}
+        <Drawer anchor="right" open={openMenu} onClose={toggleMenu}>
+          <Box sx={{ width: 250, p: 2, bgcolor: BG_NAV, height: '100%', color: TEXTO }}>
+
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography sx={{ color: TEXTO }}>Menú</Typography>
+              <IconButton onClick={toggleMenu} sx={{ color: TEXTO }}>
+                <CloseIcon />
+              </IconButton>
             </Box>
 
-            <Button
-              onClick={handleCerrarSesion}
-              variant="outlined"
-              sx={{
-                borderColor: 'rgba(34,197,94,0.5)',
-                color: VERDE,
-                textTransform: 'none',
-                fontSize: 13,
-                ml: 1,
-                '&:hover': {
-                  bgcolor: 'rgba(34,197,94,0.10)',
-                  borderColor: VERDE,
-                },
-              }}
-            >
-              Cerrar sesión
-            </Button>
-          </>
-        ) : (
-          <Button
-            component={Link}
-            to="/inicio"
-            variant="contained"
-            sx={{
-              ml: 1,
-              bgcolor: VERDE,
-              color: '#0f172a',
-              textTransform: 'none',
-              fontSize: 13,
-              '&:hover': {
-                bgcolor: VERDE_HOVER,
-              },
-            }}
-          >
-            Iniciar sesión
-          </Button>
-        )}
+            <Divider sx={{ my: 1, borderColor: 'rgba(255,255,255,0.1)' }} />
+
+            <List>
+              {menuItems.map((item) => (
+                <ListItemButton
+                  key={item.text}
+                  component={Link}
+                  to={item.path}
+                  onClick={toggleMenu}
+                >
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+              ))}
+            </List>
+
+            <Divider sx={{ my: 1, borderColor: 'rgba(255,255,255,0.1)' }} />
+
+            {usuario ? (
+              <Button fullWidth onClick={handleCerrarSesion} sx={{ color: VERDE }}>
+                Cerrar sesión
+              </Button>
+            ) : (
+              <Button fullWidth component={Link} to="/inicio" sx={{ bgcolor: VERDE }}>
+                Iniciar sesión
+              </Button>
+            )}
+          </Box>
+        </Drawer>
+
       </Toolbar>
     </AppBar>
   );
