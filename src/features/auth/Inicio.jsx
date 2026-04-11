@@ -5,6 +5,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { Link, useNavigate } from 'react-router-dom';
 
 const VERDE = '#22c55e';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const inputSx = {
   mb: 0,
@@ -19,10 +20,10 @@ const inputSx = {
 
 export default function Login() {
   const navigate = useNavigate();
-  const [form, setForm]               = useState({ email: '', password: '' });
-  const [showPass, setShowPass]       = useState(false);
-  const [error, setError]             = useState('');
-  const [loading, setLoading]         = useState(false);
+  const [form, setForm]                       = useState({ email: '', password: '' });
+  const [showPass, setShowPass]               = useState(false);
+  const [error, setError]                     = useState('');
+  const [loading, setLoading]                 = useState(false);
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
 
   const handleChange = (e) => {
@@ -38,34 +39,35 @@ export default function Login() {
     }
     setLoading(true);
     try {
-      const res = await fetch('https://gastos-1-qah3.onrender.com/', {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: form.email, password: form.password }),
       });
       const data = await res.json();
 
-     if (!res.ok) {
-  if (data.mensaje?.includes('No existe') || data.mensaje?.includes('correo')) {
-    setError('Esta cuenta no existe. ¿Deseas registrarte?');
-    setMostrarRegistro(true);
-  } else if (data.mensaje?.includes('Contraseña') || data.mensaje?.includes('incorrecta')) {
-    setError('Contraseña incorrecta. Inténtalo de nuevo.');
-    setMostrarRegistro(false);
-  } else {
-    setError(data.mensaje || 'Credenciales incorrectas.');
-  }
-  setLoading(false); 
-  return;
-}
+      if (!res.ok) {
+        if (data.mensaje?.includes('No existe') || data.mensaje?.includes('correo')) {
+          setError('Esta cuenta no existe. ¿Deseas registrarte?');
+          setMostrarRegistro(true);
+        } else if (data.mensaje?.includes('Contraseña') || data.mensaje?.includes('incorrecta')) {
+          setError('Contraseña incorrecta. Inténtalo de nuevo.');
+          setMostrarRegistro(false);
+        } else {
+          setError(data.mensaje || 'Credenciales incorrectas.');
+        }
+        return;
+      }
 
       localStorage.setItem('usuarioActivo', JSON.stringify({ ...data.usuario, token: data.token }));
       navigate('/components');
 
     } catch (err) {
-  setError('Esta cuenta no existe. ¿Deseas registrarte?');
-  setMostrarRegistro(true);
-}
+      setError('Esta cuenta no existe. ¿Deseas registrarte?');
+      setMostrarRegistro(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -75,7 +77,6 @@ export default function Login() {
       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgcolor: '#fff', px: 5 }}>
         <Box sx={{ width: '100%', maxWidth: 360 }}>
 
-          {/* Logo */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3.5 }}>
             <Box sx={{ width: 30, height: 30, borderRadius: '8px', bgcolor: VERDE, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <AccountBalanceWalletIcon sx={{ fontSize: 15, color: '#0f172a' }} />
@@ -113,22 +114,12 @@ export default function Login() {
             </Typography>
           </Box>
 
-          {/* ── Error + botón de registro si la cuenta no existe ── */}
           {error && (
             <Box sx={{ mb: 2 }}>
               <Alert severity="error" sx={{ borderRadius: 2, fontSize: 12, py: 0.5 }}>{error}</Alert>
               {mostrarRegistro && (
-                <Button
-                  fullWidth
-                  component={Link}
-                  to="/Registro"
-                  sx={{
-                    mt: 1, bgcolor: 'rgba(34,197,94,0.08)',
-                    color: VERDE, border: `0.5px solid rgba(34,197,94,0.3)`,
-                    borderRadius: 2, textTransform: 'none', fontSize: 13,
-                    '&:hover': { bgcolor: 'rgba(34,197,94,0.15)' },
-                  }}
-                >
+                <Button fullWidth component={Link} to="/Registro"
+                  sx={{ mt: 1, bgcolor: 'rgba(34,197,94,0.08)', color: VERDE, border: `0.5px solid rgba(34,197,94,0.3)`, borderRadius: 2, textTransform: 'none', fontSize: 13, '&:hover': { bgcolor: 'rgba(34,197,94,0.15)' } }}>
                   Crear cuenta gratis →
                 </Button>
               )}

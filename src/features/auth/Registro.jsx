@@ -5,6 +5,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { Link, useNavigate } from 'react-router-dom';
 
 const VERDE = '#22c55e';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const inputSx = {
   mb: 0,
@@ -23,15 +24,20 @@ const features = [
   { color: '#a78bfa', text: '100% gratis, sin tarjeta de crédito' },
 ];
 
+const fields = [
+  { label: 'Nombre completo',      name: 'nombre',   type: 'text',     placeholder: 'Tu nombre' },
+  { label: 'Correo electrónico',   name: 'email',    type: 'email',    placeholder: 'tu@correo.com' },
+  { label: 'Contraseña',           name: 'password', type: 'password', placeholder: 'Mínimo 6 caracteres' },
+  { label: 'Confirmar contraseña', name: 'confirmar',type: 'password', placeholder: 'Repite tu contraseña' },
+];
+
 export default function Registro() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ nombre: '', email: '', password: '', confirmar: '' });
+  const [form, setForm]         = useState({ nombre: '', email: '', password: '', confirmar: '' });
   const [showPass, setShowPass] = useState({ password: false, confirmar: false });
-  const [error, setError]     = useState('');
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const emailValido = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  const [error, setError]       = useState('');
+  const [success, setSuccess]   = useState(false);
+  const [loading, setLoading]   = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -39,29 +45,33 @@ export default function Registro() {
   };
 
   const handleSubmit = async () => {
-    // ── Validaciones frontend ──────────────────────────────────────────────
     if (!form.nombre || !form.email || !form.password || !form.confirmar) {
-      setError('Por favor completa todos los campos.'); return;
+      setError('Por favor completa todos los campos.');
+      return;
     }
     if (!emailValido(form.email)) {
-      setError('El correo electrónico no es válido.'); return;
+      setError('El correo electrónico no es válido.');
+      return;
     }
     if (form.password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres.'); return;
+      setError('La contraseña debe tener al menos 6 caracteres.');
+      return;
     }
     if (form.password !== form.confirmar) {
-      setError('Las contraseñas no coinciden.'); return;
+      setError('Las contraseñas no coinciden.');
+      return;
     }
 
-    // ── Llamada al backend ─────────────────────────────────────────────────
     setLoading(true);
+    setError('');
+
     try {
-      const res = await fetch('https://gastos-1-qah3.onrender.com/', {
+      const res = await fetch(`${API_URL}/api/auth/registro`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          nombre: form.nombre,
-          email: form.email,
+          nombre:   form.nombre,
+          email:    form.email,
           password: form.password,
         }),
       });
@@ -77,18 +87,11 @@ export default function Registro() {
       setTimeout(() => navigate('/Inicio'), 1500);
 
     } catch (err) {
-      setError('No se pudo conectar con el servidor.');
+      setError('Error de conexión con el servidor.');
     } finally {
       setLoading(false);
     }
   };
-
-  const fields = [
-    { label: 'Nombre completo',      name: 'nombre',   type: 'text',     placeholder: 'Tu nombre' },
-    { label: 'Correo electrónico',   name: 'email',    type: 'email',    placeholder: 'tu@correo.com' },
-    { label: 'Contraseña',           name: 'password', type: 'password', placeholder: 'Mínimo 6 caracteres' },
-    { label: 'Confirmar contraseña', name: 'confirmar',type: 'password', placeholder: 'Repite tu contraseña' },
-  ];
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
@@ -106,14 +109,12 @@ export default function Registro() {
           <Box sx={{ width: 56, height: 56, borderRadius: '14px', bgcolor: 'rgba(34,197,94,0.15)', border: '0.5px solid rgba(34,197,94,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', mx: 'auto', mb: 3 }}>
             <AccountBalanceWalletIcon sx={{ fontSize: 24, color: VERDE }} />
           </Box>
-
           <Typography variant="h5" sx={{ fontWeight: 500, color: '#f1f5f9', mb: 1.5, lineHeight: 1.3 }}>
-          Únete a <Box component="span" sx={{ color: VERDE }}>Gestor Financiero</Box>
-        </Typography>
+            Únete a <Box component="span" sx={{ color: VERDE }}>Gestor Financiero</Box>
+          </Typography>
           <Typography sx={{ fontSize: 13, color: 'rgba(241,245,249,0.4)', lineHeight: 1.7, mb: 4 }}>
             Empieza a controlar tus finanzas de manera inteligente y sin esfuerzo.
           </Typography>
-
           {features.map(f => (
             <Box key={f.text} sx={{ display: 'flex', alignItems: 'center', gap: 1.2, bgcolor: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.08)', borderRadius: '10px', px: 1.8, py: 1.4, mb: 1.2, textAlign: 'left' }}>
               <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: f.color, flexShrink: 0 }} />

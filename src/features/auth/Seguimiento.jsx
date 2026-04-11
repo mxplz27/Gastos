@@ -12,11 +12,10 @@ import {
 
 ChartJS.register(ArcElement, Tooltip, CategoryScale, LinearScale, BarElement);
 
-// ── Constantes ────────────────────────────────────────────────────────────
-const VERDE      = '#22c55e';
-const API_GASTOS = 'https://gastos-1-qah3.onrender.com/';
+const VERDE    = '#22c55e';
+const API_URL  = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_GASTOS = `${API_URL}/api/gastos`;
 
-// ── Helpers ───────────────────────────────────────────────────────────────
 const coloresCat = {
   Vivienda:     '#f87171',
   Alimentación: '#fb923c',
@@ -60,7 +59,6 @@ const BAR_OPTIONS = {
   },
 };
 
-// ─────────────────────────────────────────────────────────────────────────
 export default function Seguimiento() {
   const usuario = JSON.parse(localStorage.getItem('usuarioActivo') || 'null');
   const headers = {
@@ -71,7 +69,6 @@ export default function Seguimiento() {
   const [gastos,  setGastos]  = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // ── Carga de datos ───────────────────────────────────────────────────
   useEffect(() => {
     if (!usuario) return;
     const fetchData = async () => {
@@ -79,7 +76,7 @@ export default function Seguimiento() {
       try {
         const res  = await fetch(API_GASTOS, { headers });
         const data = await res.json();
-        setGastos(data);
+        setGastos(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Error cargando gastos:', err);
       } finally {
@@ -89,7 +86,6 @@ export default function Seguimiento() {
     fetchData();
   }, [usuario?.token]);
 
-  // ── Cálculos derivados ───────────────────────────────────────────────
   const catData = Object.entries(
     gastos.reduce((acc, g) => {
       acc[g.categoria] = (acc[g.categoria] || 0) + g.monto;
@@ -120,19 +116,16 @@ export default function Seguimiento() {
     }],
   };
 
-  // ── Loading ──────────────────────────────────────────────────────────
   if (loading) return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
       <CircularProgress sx={{ color: VERDE }} />
     </Box>
   );
 
-  // ── Render ───────────────────────────────────────────────────────────
   return (
     <Box sx={{ bgcolor: '#f1f5f9', minHeight: '100vh', px: { xs: 3, md: 6 }, py: 5 }}>
       <Box sx={{ maxWidth: 960, mx: 'auto' }}>
 
-        {/* ── Encabezado ── */}
         <Typography variant="h5" sx={{ fontWeight: 500, color: '#0f172a', mb: 0.5 }}>
           Seguimiento financiero
         </Typography>
@@ -193,7 +186,6 @@ export default function Seguimiento() {
             </Box>
           ) : (
             <Box sx={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-              {/* Gráfico */}
               <Box sx={{ width: 220, flexShrink: 0 }}>
                 <Doughnut
                   data={{
@@ -213,7 +205,6 @@ export default function Seguimiento() {
                   }}
                 />
               </Box>
-              {/* Leyenda */}
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 {catData.map((c) => (
                   <Box key={c.label} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

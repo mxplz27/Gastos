@@ -13,7 +13,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link } from 'react-router-dom';
 
 const VERDE = '#22c55e';
-const API = 'https://gastos-1-qah3.onrender.com/';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API = `${API_URL}/api/gastos`;
 
 const categorias = ['Alimentación', 'Movilidad', 'Vivienda', 'Ocio', 'Salud', 'Educación', 'Servicios', 'Otro'];
 
@@ -58,7 +59,7 @@ export default function MisGastos() {
   const [guardando, setGuardando]   = useState(false);
   const [snack, setSnack]           = useState({ open: false, msg: '', tipo: 'success' });
   const [editandoId, setEditandoId] = useState(null);
-  const [alertaLogin, setAlertaLogin]     = useState(false);
+  const [alertaLogin, setAlertaLogin]         = useState(false);
   const [confirmEliminar, setConfirmEliminar] = useState({ open: false, id: null, titulo: '' });
   const [confirmEditar, setConfirmEditar]     = useState({ open: false, gasto: null });
   const [modalEditar, setModalEditar]         = useState(false);
@@ -218,6 +219,8 @@ export default function MisGastos() {
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1.5, mb: 3.5 }}>
           {[
             { label: 'Total gastos',       valor: fmt(total),    color: '#f87171' },
+            { label: 'Registros',          valor: gastos.length, color: VERDE     },
+            { label: 'Promedio por gasto', valor: fmt(avg),      color: '#60a5fa' },
           ].map(s => (
             <Box key={s.label} sx={{ bgcolor: '#fff', borderRadius: '12px', border: '0.5px solid #e2e8f0', p: 2 }}>
               <Typography sx={{ fontSize: 12, color: '#94a3b8', mb: 0.5 }}>{s.label}</Typography>
