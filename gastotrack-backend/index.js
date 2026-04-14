@@ -9,12 +9,18 @@ const app = express();
 // 🔥 CONFIGURACIÓN CORS (PRODUCCIÓN + LOCAL)
 // ───────────────────────────────
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
+  origin: function(origin, callback) {
+    const allowed = [
+      'http://localhost:5173',
       'http://localhost:4173',
-        'https://gastos-x2iw-git-main-mxplz27s-projects.vercel.app',  
-    'https://gastos-x2iw.vercel.app'
-  ],
+      'https://gastos-x2iw.vercel.app',
+    ];
+    if (!origin || allowed.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
