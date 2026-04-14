@@ -5,7 +5,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { Link, useNavigate } from 'react-router-dom';
 
 const VERDE = '#22c55e';
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'https://gastos-1-qah3.onrender.com';
 
 const inputSx = {
   mb: 0,
