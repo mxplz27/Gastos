@@ -45,7 +45,7 @@ export default function Registro() {
 
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/auth/registro`, {
+      const res = await fetch(`${API_URL}/api/auth/Registro`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre: form.nombre, email: form.email, password: form.password }),
@@ -141,7 +141,7 @@ export default function Registro() {
 
           <Typography variant="body2" sx={{ color: '#94a3b8', textAlign: 'center' }}>
             ¿Ya tienes cuenta?{' '}
-            <Box component={Link} to="/login" sx={{ color: VERDE, fontWeight: 500, textDecoration: 'none' }}>
+            <Box component={Link} to="/Inicio" sx={{ color: VERDE, fontWeight: 500, textDecoration: 'none' }}>
               Inicia sesión
             </Box>
           </Typography>

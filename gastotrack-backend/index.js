@@ -11,6 +11,7 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:5173',
+      'http://localhost:4173',
     'https://gastos-x2iw.vercel.app'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

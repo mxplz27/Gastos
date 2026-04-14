@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const Usuario = require('../Models/Usuario');
 
 // ── POST /api/auth/registro ──────────────────────────────────────────────────
-router.post('/registro', async (req, res) => {
+router.post('/Registro', async (req, res) => {
   try {
     const { nombre, email, password } = req.body;
 

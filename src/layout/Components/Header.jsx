@@ -105,19 +105,6 @@ export default function Header() {
             </Button>
           ))}
 
-          {usuario && (
-            <Chip
-              icon={<TrendingDownIcon sx={{ fontSize: 14, color: VERDE }} />}
-              label={`$${(resumenMes || 0).toLocaleString('es-CO')} este mes`}
-              size="small"
-              sx={{
-                mx: 2,
-                bgcolor: 'rgba(34,197,94,0.10)',
-                color: VERDE,
-                border: '0.5px solid rgba(34,197,94,0.35)',
-              }}
-            />
-          )}
 
           {usuario ? (
             <>
