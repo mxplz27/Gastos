@@ -13,7 +13,7 @@ import {
 ChartJS.register(ArcElement, Tooltip, CategoryScale, LinearScale, BarElement);
 
 const VERDE    = '#22c55e';
-const API_URL  = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL  = 'https://gastos-1-qah3.onrender.com';
 const API_GASTOS = `${API_URL}/api/gastos`;
 
 const coloresCat = {

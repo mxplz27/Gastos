@@ -13,7 +13,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link } from 'react-router-dom';
 
 const VERDE = '#22c55e';
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = 'https://gastos-1-qah3.onrender.com';
 const API = `${API_URL}/api/gastos`;
 
 const categorias = ['Alimentación', 'Movilidad', 'Vivienda', 'Ocio', 'Salud', 'Educación', 'Servicios', 'Otro'];
