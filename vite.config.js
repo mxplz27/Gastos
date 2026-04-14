@@ -33,33 +33,38 @@ export default defineConfig({
 
         icons: [
           {
-            src: '/img/icon-192.png',  // ← existe en public/img/
+            src: '/img/icon-192.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any',
           },
           {
-            src: '/img/icon-512.png',  // ← existe en public/img/
+      src: "/favicon.svg",
+      sizes: "any",
+      type: "image/svg+xml"
+    },
+          {
+            src: '/img/icon-512.png',  
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',
           },
         ],
 
-        screenshots: [
-          {
-            src: '/img/notas.jpg',    
-            sizes: '844x474',
-            type: 'image/jpeg',       
-            form_factor: 'narrow',
-          },
-          {
-            src: '/img/chat.png',      // ← existe en public/img/
-            sizes: '848x444',
-            type: 'image/png',
-            form_factor: 'wide',
-          },
-        ],
+       screenshots: [
+            {
+              src: '/img/sena.png',  
+              sizes: '512x512',
+              type: 'image/png',       
+              form_factor: 'narrow',
+            },
+            {
+              src: '/img/chat.png',
+              sizes: '848x444',
+              type: 'image/png',
+              form_factor: 'wide',
+            },
+          ],
       },
     }),
   ],
